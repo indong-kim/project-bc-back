@@ -3,11 +3,10 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { BullModule } from '@nestjs/bull';
 import { ConsumerService } from './queue/consumer.service';
-import { MoveModule } from './module/move/move.module';
-import { LoginModule } from './module/login/login.module';
 import { AppGateway } from './gateway/app.gateway';
 import { ScheduleModule } from '@nestjs/schedule';
 import { ScheduelrService } from './scheduler/scheduler.service';
+import { ChainModule } from './module/chain/chain.module';
 @Module({
   imports: [
     BullModule.forRoot({
@@ -17,9 +16,8 @@ import { ScheduelrService } from './scheduler/scheduler.service';
       },
     }),
     BullModule.registerQueue({ name: 'queue' }),
-    MoveModule,
-    LoginModule,
     ScheduleModule.forRoot(),
+    ChainModule,
   ],
   controllers: [AppController],
   providers: [AppService, ConsumerService, AppGateway, ScheduelrService],

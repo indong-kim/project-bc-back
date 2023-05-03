@@ -7,6 +7,7 @@ import {
   SubscribeMessage,
 } from '@nestjs/websockets';
 import { Queue } from 'bull';
+import { JsonRpcProvider, ethers } from 'ethers';
 import { Server } from 'socket.io';
 import { clientList } from 'src/env/clients';
 import { START_POSITION } from 'src/resources/start-position';
@@ -24,6 +25,13 @@ export class AppGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
     client['id'] = clients.length.toString();
     client['pos'] = START_POSITION[client['id']];
+
+    const provider = new JsonRpcProvider();
+    const wallet = ethers.Wallet.createRandom(provider);
+
+    client['address'] = wallet.address;
+    client['mnemonic'] = wallet.mnemonic.phrase;
+    client['privatekey'] = wallet.privateKey;
 
     clientList[client['id']] = client;
   }
