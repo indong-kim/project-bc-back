@@ -62,6 +62,20 @@ export class AppGateway implements OnGatewayConnection, OnGatewayDisconnect {
       case 'move':
         await this.moveQueue.add('move', payload, { removeOnComplete: true });
         break;
+      case 'after-create':
+        //exist-userlist
+        //나를 제외한 모든 클라 리스트를 넘겨주면됨
+        const clients: {} = {};
+        for (const [id, existClient] of Object.entries<WebSocket>(clientList)) {
+          if (id === client['id']) continue;
+          clients[id] = existClient['pos'];
+        }
+        const existClientList = {
+          event: 'exist-userlist',
+          clients,
+        };
+        client.send(JSON.stringify(existClientList));
+        break;
     }
   }
 }
